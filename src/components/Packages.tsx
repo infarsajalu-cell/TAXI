@@ -2,7 +2,7 @@
 
 import React from 'react';
 import { motion } from 'framer-motion';
-import { Plane, Calendar, MapPin, MessageSquare, FileText, ArrowRight } from 'lucide-react';
+import { TreePine, Calendar, MapPin, MessageSquare, FileText, ArrowRight } from 'lucide-react';
 import Link from 'next/link';
 import { usePathname } from "next/navigation";
 
@@ -22,7 +22,7 @@ const packages = [
     days: '3 Days / 2 Nights',
     destination: 'Muthanga Wildlife, Tholpetty, Kuruva Island',
     price: 'Starting from ₹7,500',
-    icon: <Plane className="w-6 h-6" />,
+    icon: <TreePine className="w-6 h-6" />,
     color: 'from-emerald-500/20 to-teal-500/20'
   },
   {
