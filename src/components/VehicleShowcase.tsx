@@ -135,7 +135,16 @@ const VehicleCard = ({ vehicle, index }: { vehicle: typeof vehicles[0], index: n
                 ))}
               </ul>
             </div>
-            <button className="premium-button w-full mt-auto">Book This Vehicle</button>
+            <button 
+              onClick={(e) => {
+                e.stopPropagation();
+                const msg = encodeURIComponent(`Hello, I would like to book the ${vehicle.name} (${vehicle.type}). Please share availability and pricing.`);
+                window.open(`https://wa.me/919544819365?text=${msg}`, '_blank');
+              }}
+              className="premium-button w-full mt-auto"
+            >
+              Book This Vehicle
+            </button>
           </div>
         </div>
       </motion.div>

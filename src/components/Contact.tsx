@@ -31,6 +31,8 @@ const Contact = () => {
     const data = {
       name: formData.get('name'),
       phone: formData.get('phone'),
+      vehicle: formData.get('vehicle'),
+      passengers: formData.get('passengers'),
       package: formData.get('package'),
       message: formData.get('message'),
     };
@@ -194,10 +196,48 @@ const Contact = () => {
                     </motion.div>
                   </div>
 
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <motion.div 
+                      initial={{ opacity: 0, y: 20 }}
+                      whileInView={{ opacity: 1, y: 0 }}
+                      transition={{ delay: 0.25 }}
+                      viewport={{ once: true }}
+                      className="space-y-2"
+                    >
+                      <label className="text-xs font-bold uppercase tracking-wider text-gray-400">Preferred Vehicle</label>
+                      <select 
+                        name="vehicle"
+                        className="w-full bg-white/5 border border-white/10 rounded-lg px-4 py-3 focus:border-primary focus:shadow-[0_0_15px_rgba(245,158,11,0.15)] outline-none transition-all duration-300 appearance-none"
+                      >
+                        <option className="bg-gray-900">No Preference</option>
+                        <option className="bg-gray-900">Toyota Glanza</option>
+                        <option className="bg-gray-900">Toyota Innova Crysta</option>
+                        <option className="bg-gray-900">Maruti Ertiga</option>
+                      </select>
+                    </motion.div>
+                    <motion.div 
+                      initial={{ opacity: 0, y: 20 }}
+                      whileInView={{ opacity: 1, y: 0 }}
+                      transition={{ delay: 0.3 }}
+                      viewport={{ once: true }}
+                      className="space-y-2"
+                    >
+                      <label className="text-xs font-bold uppercase tracking-wider text-gray-400">No. of Passengers</label>
+                      <input 
+                        name="passengers"
+                        type="number" 
+                        min="1"
+                        max="20"
+                        placeholder="e.g. 4"
+                        className="w-full bg-white/5 border border-white/10 rounded-lg px-4 py-3 focus:border-primary focus:shadow-[0_0_15px_rgba(245,158,11,0.15)] outline-none transition-all duration-300"
+                      />
+                    </motion.div>
+                  </div>
+
                   <motion.div 
                     initial={{ opacity: 0, y: 20 }}
                     whileInView={{ opacity: 1, y: 0 }}
-                    transition={{ delay: 0.3 }}
+                    transition={{ delay: 0.35 }}
                     viewport={{ once: true }}
                     className="space-y-2"
                   >
