@@ -1,7 +1,7 @@
 'use client';
 
-import React, { useState } from 'react';
-import { motion } from 'framer-motion';
+import React, { useState, useRef } from 'react';
+import { motion, useScroll, useTransform } from 'framer-motion';
 import { Users, Wind, ShieldCheck, Zap } from 'lucide-react';
 import Image from 'next/image';
 
@@ -22,15 +22,32 @@ const vehicles = [
   },
   {
     name: 'Maruti Ertiga',
-    image: '/images/ertiga.webp', // Professional Placeholder
+    image: '/images/ertiga.webp',
     passengers: 7,
     features: ['Efficient AC','Premium Interior','7 Seater', 'Smooth Ride', 'Ample Luggage', 'Reliable Travel','2021 Model'],
     type: 'Comfort MUV'
   }
 ];
 
-const VehicleCard = ({ vehicle }: { vehicle: typeof vehicles[0] }) => {
+const VehicleCard = ({ vehicle, index }: { vehicle: typeof vehicles[0], index: number }) => {
   const [isFlipped, setIsFlipped] = useState(false);
+  const cardRef = useRef<HTMLDivElement>(null);
+
+  const { scrollYProgress } = useScroll({
+    target: cardRef,
+    offset: ["start end", "end start"]
+  });
+
+  // 3D perspective transforms based on scroll  
+  const rotateX = useTransform(scrollYProgress, [0, 0.3, 0.5, 1], [15, 0, 0, -5]);
+  const rotateY = useTransform(
+    scrollYProgress, 
+    [0, 0.3, 0.5, 1], 
+    [index === 0 ? 10 : index === 2 ? -10 : 0, 0, 0, 0]
+  );
+  const scale = useTransform(scrollYProgress, [0, 0.3, 0.7, 1], [0.85, 1, 1, 0.95]);
+  const opacity = useTransform(scrollYProgress, [0, 0.15, 0.8, 1], [0, 1, 1, 0.6]);
+  const translateZ = useTransform(scrollYProgress, [0, 0.3, 0.5], [-80, 0, 0]);
 
   const handleHoverStart = () => {
     if (window.matchMedia('(hover: hover)').matches) {
@@ -49,8 +66,10 @@ const VehicleCard = ({ vehicle }: { vehicle: typeof vehicles[0] }) => {
   };
 
   return (
-    <div 
-      className="relative h-[450px] w-full perspective-1000 group cursor-pointer"
+    <motion.div
+      ref={cardRef}
+      style={{ rotateX, rotateY, scale, opacity, z: translateZ }}
+      className="relative h-[450px] w-full perspective-1000 group cursor-pointer preserve-3d"
       onMouseEnter={handleHoverStart}
       onMouseLeave={handleHoverEnd}
       onClick={handleCardClick}
@@ -62,13 +81,15 @@ const VehicleCard = ({ vehicle }: { vehicle: typeof vehicles[0] }) => {
       >
         {/* Front Side */}
         <div className="absolute inset-0 backface-hidden glass-card overflow-hidden">
-          <div className="relative h-64 w-full">
+          <div className="relative h-64 w-full overflow-hidden">
             <Image 
               src={vehicle.image} 
               alt={`${vehicle.name} - Premium Wayanad Taxi`} 
               fill 
-              className="object-cover group-hover:scale-110 transition-transform duration-500"
+              className="object-cover group-hover:scale-110 transition-transform duration-700"
             />
+            {/* Shimmer overlay */}
+            <div className="absolute inset-0 shimmer opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
           </div>
           <div className="p-6">
             <div className="flex justify-between items-start mb-4">
@@ -118,38 +139,48 @@ const VehicleCard = ({ vehicle }: { vehicle: typeof vehicles[0] }) => {
           </div>
         </div>
       </motion.div>
-    </div>
+    </motion.div>
   );
 };
 
 const VehicleShowcase = () => {
+  const sectionRef = useRef<HTMLElement>(null);
+  const { scrollYProgress } = useScroll({
+    target: sectionRef,
+    offset: ["start end", "end start"]
+  });
+
+  const headingY = useTransform(scrollYProgress, [0, 0.3], [60, 0]);
+  const headingOpacity = useTransform(scrollYProgress, [0, 0.2], [0, 1]);
+
   return (
-    <section id="vehicles" className="py-24 relative">
-      <div className="container mx-auto px-6">
-        <div className="text-center mb-16">
-          <motion.h2 
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            className="text-4xl md:text-6xl font-black mb-4"
-          >
-            Our <span className="text-primary">Premium</span> Fleet
-          </motion.h2>
-          <div className="h-1 w-20 bg-primary mx-auto mb-6" />
-          <p className="text-gray-400 max-w-xl mx-auto">
-            Choose from our clean, well-maintained vehicles for a comfortable travel experience in Wayanad.
-          </p>
+    <section ref={sectionRef} id="vehicles" className="py-24 relative snap-section">
+      {/* Background parallax orbs */}
+      <div className="absolute inset-0 overflow-hidden pointer-events-none">
+        <div className="absolute top-20 left-10 w-72 h-72 bg-primary/5 rounded-full blur-[100px] floating-orb" />
+        <div className="absolute bottom-20 right-10 w-96 h-96 bg-amber-500/5 rounded-full blur-[120px] floating-orb-delayed" />
+      </div>
+
+      <div className="container mx-auto px-6 relative z-10">
+        <div className="text-center mb-16 perspective-2000">
+          <motion.div style={{ y: headingY, opacity: headingOpacity }}>
+            <motion.h2 
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              className="text-4xl md:text-6xl font-black mb-4"
+            >
+              Our <span className="text-primary">Premium</span> Fleet
+            </motion.h2>
+            <div className="h-1 w-20 bg-primary mx-auto mb-6" />
+            <p className="text-gray-400 max-w-xl mx-auto">
+              Choose from our clean, well-maintained vehicles for a comfortable travel experience in Wayanad.
+            </p>
+          </motion.div>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-8 perspective-2000">
           {vehicles.map((v, i) => (
-            <motion.div
-              key={v.name}
-              initial={{ opacity: 0, y: 30 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              transition={{ delay: i * 0.2 }}
-            >
-              <VehicleCard vehicle={v} />
-            </motion.div>
+            <VehicleCard key={v.name} vehicle={v} index={i} />
           ))}
         </div>
       </div>

@@ -1,23 +1,104 @@
 @import "tailwindcss";
 
 :root {
-  --background: #ffffff;
   --background: #0a0a0a;
   --foreground: #ededed;
   --card-bg: rgba(255, 255, 255, 0.05);
   --glass-bg: rgba(255, 255, 255, 0.03);
   --glass-border: rgba(255, 255, 255, 0.1);
   --gold-gradient: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
+  --primary: #f59e0b;
 }
 
+/* ─── Lenis Smooth Scroll ─── */
+html.lenis, html.lenis body {
+  height: auto;
+}
+
+.lenis.lenis-smooth {
+  scroll-behavior: auto !important;
+}
+
+.lenis.lenis-smooth [data-lenis-prevent] {
+  overscroll-behavior: contain;
+}
+
+.lenis.lenis-stopped {
+  overflow: hidden;
+}
+
+.lenis.lenis-scrolling iframe {
+  pointer-events: none;
+}
+
+/* ─── Base ─── */
 @layer base {
+  html {
+    overflow-x: hidden;
+  }
   body {
     background: var(--background);
     color: var(--foreground);
-    @apply antialiased overflow-x-hidden;
+    overflow-x: hidden;
+    @apply antialiased;
   }
 }
 
+/* ─── Premium Scrollbar ─── */
+::-webkit-scrollbar {
+  width: 6px;
+}
+::-webkit-scrollbar-track {
+  background: #0a0a0a;
+}
+::-webkit-scrollbar-thumb {
+  background: linear-gradient(180deg, #f59e0b 0%, #d97706 100%);
+  border-radius: 3px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #f59e0b;
+}
+
+/* ─── Scroll Snap (desktop only) ─── */
+@media (min-width: 768px) {
+  .snap-container {
+    scroll-snap-type: y proximity;
+  }
+
+  .snap-section {
+    scroll-snap-align: start;
+  }
+}
+
+/* ─── Mobile: tone down 3D for GPU performance ─── */
+@media (max-width: 767px) {
+  .perspective-2000 {
+    perspective: none;
+  }
+  .preserve-3d {
+    transform-style: flat;
+  }
+}
+
+/* ─── Horizontal Scroll ─── */
+.horizontal-scroll-container {
+  overflow-x: auto;
+  overflow-y: hidden;
+  scroll-snap-type: x mandatory;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none;
+}
+
+.horizontal-scroll-container::-webkit-scrollbar {
+  display: none;
+}
+
+.horizontal-scroll-item {
+  scroll-snap-align: center;
+  flex-shrink: 0;
+}
+
+/* ─── Components ─── */
 @layer components {
   .glass-card {
     background: var(--glass-bg);
@@ -25,7 +106,7 @@
     border: 1px solid var(--glass-border);
     @apply rounded-2xl transition-all duration-300;
   }
-  
+
   .premium-button {
     background: var(--gold-gradient);
     @apply text-black font-semibold px-6 py-3 rounded-lg transition-transform active:scale-95 shadow-lg;
@@ -35,8 +116,13 @@
     text-shadow: 0 0 20px rgba(245, 158, 11, 0.3);
   }
 
+  /* ─── 3D Transform Utilities ─── */
   .perspective-1000 {
     perspective: 1000px;
+  }
+
+  .perspective-2000 {
+    perspective: 2000px;
   }
 
   .preserve-3d {
@@ -46,4 +132,112 @@
   .backface-hidden {
     backface-visibility: hidden;
   }
+
+  .transform-gpu {
+    transform: translateZ(0);
+    will-change: transform;
+  }
+
+  /* ─── Parallax Layers ─── */
+  .parallax-slow {
+    will-change: transform;
+    transition: transform 0.1s linear;
+  }
+
+  .parallax-fast {
+    will-change: transform;
+    transition: transform 0.05s linear;
+  }
+}
+
+/* ─── Scroll Reveal Keyframes ─── */
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(60px) scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+@keyframes fadeInLeft {
+  from {
+    opacity: 0;
+    transform: translateX(-80px) rotateY(8deg);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0) rotateY(0deg);
+  }
+}
+
+@keyframes fadeInRight {
+  from {
+    opacity: 0;
+    transform: translateX(80px) rotateY(-8deg);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0) rotateY(0deg);
+  }
+}
+
+@keyframes zoomReveal {
+  from {
+    opacity: 0;
+    transform: scale(0.6) rotateX(15deg);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1) rotateX(0deg);
+  }
+}
+
+@keyframes slideInFromBottom3D {
+  from {
+    opacity: 0;
+    transform: translateY(100px) rotateX(25deg) scale(0.9);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) rotateX(0deg) scale(1);
+  }
+}
+
+@keyframes floatOrb {
+  0%, 100% { transform: translateY(0px) translateX(0px); }
+  25% { transform: translateY(-20px) translateX(10px); }
+  50% { transform: translateY(-10px) translateX(-15px); }
+  75% { transform: translateY(-30px) translateX(5px); }
+}
+
+@keyframes shimmer {
+  0% { background-position: -200% 0; }
+  100% { background-position: 200% 0; }
+}
+
+/* ─── Floating Orb ─── */
+.floating-orb {
+  animation: floatOrb 8s ease-in-out infinite;
+  pointer-events: none;
+}
+
+.floating-orb-delayed {
+  animation: floatOrb 10s ease-in-out infinite;
+  animation-delay: -3s;
+  pointer-events: none;
+}
+
+/* ─── Shimmer effect ─── */
+.shimmer {
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    rgba(245, 158, 11, 0.08) 50%,
+    transparent 100%
+  );
+  background-size: 200% 100%;
+  animation: shimmer 3s ease-in-out infinite;
 }
