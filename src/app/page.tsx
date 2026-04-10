@@ -120,7 +120,7 @@ const AboutSection = () => {
         {/* Left: Zoom stat */}
         <motion.div 
           style={{ scale: statScale, opacity: statOpacity, rotateX: statRotateX }}
-          className="relative preserve-3d"
+          className="relative preserve-3d scroll-3d"
         >
           <div className="absolute -inset-4 bg-[url('/images/taxi.jpg')] blur-l rounded-full" />
           <div className="relative bg-[#80808021] p-8 aspect-square flex items-center justify-center text-center rounded-2xl overflow-hidden">

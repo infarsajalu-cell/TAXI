@@ -77,7 +77,7 @@ const Contact = () => {
           {/* Info Side — 3D entrance from left */}
           <motion.div
             style={{ rotateY: leftRotateY, opacity: leftOpacity, x: leftX }}
-            className="preserve-3d"
+            className="preserve-3d scroll-3d"
           >
             <h2 className="text-4xl font-black mb-6 uppercase tracking-tighter">Starego Premium <br /><span className="text-primary text-glow">Travel Agency</span></h2>
             <div className="prose prose-invert mb-12 text-gray-400">
@@ -134,7 +134,7 @@ const Contact = () => {
           {/* Form Side — 3D entrance from right */}
           <motion.div
             style={{ rotateY: rightRotateY, opacity: rightOpacity, x: rightX }}
-            className="glass-card p-8 md:p-12 preserve-3d"
+            className="glass-card p-8 md:p-12 preserve-3d scroll-3d"
           >
             {submitted ? (
               <motion.div 

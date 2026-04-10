@@ -66,7 +66,7 @@ const Hero = () => {
             y: contentY,
             opacity: contentOpacity,
           }}
-          className="preserve-3d"
+          className="preserve-3d scroll-3d"
         >
           <motion.div
             initial={{ opacity: 0, y: 50, scale: 0.9 }}

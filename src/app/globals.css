@@ -75,7 +75,7 @@ html.lenis, html.lenis body {
   .perspective-2000 {
     perspective: none;
   }
-  .preserve-3d {
+  .scroll-3d {
     transform-style: flat;
   }
 }
